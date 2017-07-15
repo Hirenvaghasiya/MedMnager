@@ -1,0 +1,26 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org/">
+<head th:replace="fragments :: head"></head>
+<body class="container">
+        <nva th:replace="fragments :: navigation"></nva>
+
+
+        <table class="table">
+
+            <tr>
+                <th>Id</th>
+                <th>Name</th>
+                <th>Type</th>
+                <th>Price</th>
+            </tr>
+            <tr  th:each="medicine: ${medicines}" >
+                <td th:text="${medicine.id}"></td>
+                <td th:text="${medicine.name}"></td>
+                <td th:text="${medicine.type.name}"></td>
+                <td th:text="${medicine.price}"></td>
+            </tr>
+        </table>
+
+
+ </body>
+</html>

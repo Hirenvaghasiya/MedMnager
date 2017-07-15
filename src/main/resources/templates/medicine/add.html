@@ -1,0 +1,33 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org/">
+<head th:replace="fragments :: head"></head>
+<body class="container">
+    <nva th:replace="fragments :: navigation"></nva>
+<h1 th:text="${title}"></h1>
+<form method="post"  style="max-width:50%;" th:object="${medicine}">
+
+    <div class="form-group" style="max-width:50%;">
+        <label th:for="name">Name</label>
+        <input th:field="*{name}" class="form-control" />
+        <span th:errors="*{name}" class="error"> </span>
+    </div>
+    <div class="form-group" style="max-width:50%;">
+        <label th:for="price">Price</label>
+        <input th:field="*{price}" class="form-control"/>
+        <span th:errors="*{price}" class="error"> </span>
+    </div>
+    <div class="form-group" style="max-width:50%;">
+        <label th:for="type">Type</label>
+        <select th:field="*{type}" class="form-control">
+            <option th:each="medicineType : ${medicineTypes}"
+                    th:text="${medicineType.name}" th:value="${medicineType}" class="form-control"></option>
+        </select>
+
+    </div>
+    <button type="submit" class="btn btn-info">Submit</button>
+</form>
+
+<h3 th:text="${id}"></h3>
+<h3 th:text="${name}"></h3>
+</body>
+</html>
