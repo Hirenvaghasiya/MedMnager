@@ -3,7 +3,12 @@
 <head th:replace="categories :: head"></head>
 <body class="container">
     <nav th:replace="categories :: navigation"></nav>
-
+    <h1 th:text="${title}"></h1>
+    <ul class="list-group" style="max-width:50%; text-align:center;">
+       <li th:each="category : ${categories}" class="list-group-item">
+           <a th:href="@{medicine/category(id=${category.id})}" th:text="${category.name}" ></a>
+       </li>
+    </ul>
 
 </body>
 </html>

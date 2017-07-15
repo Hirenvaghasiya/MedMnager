@@ -5,6 +5,7 @@ package org.MadManager.medmanager.models;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.Id;
+import javax.persistence.ManyToOne;
 import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Size;
 
@@ -23,7 +24,8 @@ public class Medicine {
     @NotNull
     private Double price;
 
-    private MedicineType type;
+    @ManyToOne
+    private Category category;
 
     public Medicine(String name,Double price) {
         this.name = name;
@@ -51,11 +53,12 @@ public class Medicine {
         this.name = name;
     }
 
-    public MedicineType getType() {
-        return type;
+    public void setCategory(Category category) {
+        this.category = category;
     }
 
-    public void setType(MedicineType type) {
-        this.type = type;
+    public Category getCategory() {
+        return category;
     }
-}
+
+  }

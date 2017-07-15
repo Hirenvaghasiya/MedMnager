@@ -1,7 +1,8 @@
 package org.MadManager.medmanager.controller;
 
+import org.MadManager.medmanager.models.Category;
 import org.MadManager.medmanager.models.Medicine;
-import org.MadManager.medmanager.models.MedicineType;
+import org.MadManager.medmanager.models.dao.CategoryDao;
 import org.MadManager.medmanager.models.dao.MedicineDao;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
@@ -13,6 +14,7 @@ import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
 
 import javax.validation.Valid;
+import java.util.List;
 
 /**
  * Created by Hiren on 7/9/2017.
@@ -23,6 +25,9 @@ public class MedicineController {
 
     @Autowired
     private MedicineDao medicineDao;
+
+    @Autowired
+    private CategoryDao categoryDao;
 
     @RequestMapping(value = "")
     public  String index(Model model){
@@ -37,18 +42,20 @@ public class MedicineController {
 
         model.addAttribute("title","Add Medicine");
         model.addAttribute(new Medicine());
-        model.addAttribute("medicineTypes", MedicineType.values());
+        model.addAttribute("categories", categoryDao.findAll());
 
         return "medicine/add";
     }
 
     @RequestMapping(value = "add", method = RequestMethod.POST)
-    public String processAdd(@ModelAttribute  @Valid Medicine newMedicine, Errors errors, Model model){
+    public String processAdd(@ModelAttribute  @Valid Medicine newMedicine, Errors errors, Model model, @RequestParam Integer categoryId){
         if(errors.hasErrors()){
             model.addAttribute("title","Add Medicine");
             return "medicine/add";
         }
 
+        Category cat = categoryDao.findOne(categoryId);
+        newMedicine.setCategory(cat);
         medicineDao.save(newMedicine);
         return  "redirect:";
     }
@@ -67,5 +74,14 @@ public class MedicineController {
 
             }
         return "redirect:";
+    }
+    @RequestMapping(value = "category",method = RequestMethod.GET)
+    public String category(Model model, @RequestParam Integer id){
+
+        Category cat = categoryDao.findOne(id);
+        List<Medicine> medicines = cat.getMedicines();
+        model.addAttribute("medicines",medicines);
+        model.addAttribute("title","Medicine in Category "+cat.getName());
+        return "medicine/index";
     }
 }

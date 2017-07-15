@@ -1,9 +1,9 @@
 package org.MadManager.medmanager.models;
 
-import javax.persistence.Entity;
-import javax.persistence.GeneratedValue;
-import javax.persistence.Id;
+import javax.persistence.*;
 import javax.validation.constraints.NotNull;
+import java.util.ArrayList;
+import java.util.List;
 
 /**
  * Created by Hiren on 7/15/2017.
@@ -17,6 +17,9 @@ public class Category {
     @NotNull
     private  String name;
 
+    @OneToMany
+    @JoinColumn(name = "category_id")
+    private List<Medicine> medicines = new ArrayList<>();
     public Category() {
     }
 
@@ -34,5 +37,9 @@ public class Category {
 
     public void setName(String name) {
         this.name = name;
+    }
+
+    public List<Medicine> getMedicines() {
+        return medicines;
     }
 }

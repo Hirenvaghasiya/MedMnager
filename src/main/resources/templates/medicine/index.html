@@ -3,7 +3,7 @@
 <head th:replace="fragments :: head"></head>
 <body class="container">
         <nva th:replace="fragments :: navigation"></nva>
-
+        <h1 th:text="${title}"></h1>
 
         <table class="table">
 
@@ -16,7 +16,7 @@
             <tr  th:each="medicine: ${medicines}" >
                 <td th:text="${medicine.id}"></td>
                 <td th:text="${medicine.name}"></td>
-                <td th:text="${medicine.type.name}"></td>
+                <td th:text="${medicine.category.name}"></td>
                 <td th:text="${medicine.price}"></td>
             </tr>
         </table>
