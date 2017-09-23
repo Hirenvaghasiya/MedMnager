@@ -51,6 +51,7 @@ public class MedicineController {
     public String processAdd(@ModelAttribute  @Valid Medicine newMedicine, Errors errors, Model model, @RequestParam Integer categoryId){
         if(errors.hasErrors()){
             model.addAttribute("title","Add Medicine");
+            model.addAttribute("categories",categoryDao.findAll());
             return "medicine/add";
         }
 

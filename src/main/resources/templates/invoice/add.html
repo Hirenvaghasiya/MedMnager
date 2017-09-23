@@ -1,0 +1,25 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org/">
+<head th:replace="invoices :: head"></head>
+<body class="container">
+
+<nav th:replace="invoices :: navigation"></nav>
+
+<form method="post" th:object="${invoice}" style="max-width:50%;">
+    <div class="form-group">
+        <label th:for="date">Date</label>
+        <input th:field="*{date}" class="form-control" type="date" />
+        <span th:errors="*{date}" class="error"> </span>
+    </div>
+    <div class="form-group">
+        <label th:for="patientName">Petient Name:</label>
+        <input th:field="*{patientName}" class="form-control" />
+        <span th:errors="*{patientName}" class="error"> </span>
+    </div>
+    <div class="form-group">
+        <button type="submit" class="btn btn-info">Submit</button>
+    </div>
+</form>
+
+</body>
+</html>

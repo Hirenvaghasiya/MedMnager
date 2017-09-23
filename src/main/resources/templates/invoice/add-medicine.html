@@ -1,0 +1,23 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org/">
+<head th:replace="invoices :: head"></head>
+<body class="container">
+
+    <nav th:replace="invoices :: navigation"></nav>
+    <form method="post" th:object="${form}" action="/invoice/add-medicine">
+        <div class="form-group">
+            <label th:for="medicineId"> Medicine</label>
+            <select name="medicineId">
+                <option th:each="medicine : *{medicines}"
+                        th:text="${medicine.name}"
+                        th:value="${medicine.id}">
+
+                </option>
+            </select>
+        </div>
+        <input type="hidden" name="invoiceId" th:value="*{invoice.id}" />
+
+        <button type="submit" value="Add Medicine">Add Medicine</button>
+    </form>
+</body>
+</html>

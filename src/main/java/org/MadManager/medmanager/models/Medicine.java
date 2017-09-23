@@ -2,12 +2,10 @@ package org.MadManager.medmanager.models;
 
 
 
-import javax.persistence.Entity;
-import javax.persistence.GeneratedValue;
-import javax.persistence.Id;
-import javax.persistence.ManyToOne;
+import javax.persistence.*;
 import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Size;
+import java.util.Set;
 
 /**
  * Created by Hiren on 7/11/2017.
@@ -27,6 +25,9 @@ public class Medicine {
     @ManyToOne
     private Category category;
 
+    @ManyToMany(mappedBy = "medicines")
+    private Set<Invoice> invoices;
+
     public Medicine(String name,Double price) {
         this.name = name;
         this.price = price;
@@ -35,6 +36,19 @@ public class Medicine {
 
     public Integer getId() {
         return id;
+    }
+
+    public Set<Invoice> getInvoices() {
+        return invoices;
+    }
+
+    public Medicine(String name, Set<Invoice> invoices){
+        this.name = name;
+        this.invoices = invoices;
+    }
+
+    public void setInvoices(Set<Invoice> invoices) {
+        this.invoices = invoices;
     }
 
     public String getName() {
@@ -61,4 +75,4 @@ public class Medicine {
         return category;
     }
 
-  }
+}
