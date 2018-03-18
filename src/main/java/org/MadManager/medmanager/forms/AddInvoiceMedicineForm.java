@@ -1,4 +1,4 @@
-package org.MadManager.medmanager.models.forms;
+package org.MadManager.medmanager.forms;
 
 import org.MadManager.medmanager.models.Invoice;
 import org.MadManager.medmanager.models.Medicine;

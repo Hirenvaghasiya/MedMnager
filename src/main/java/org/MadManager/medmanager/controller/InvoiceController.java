@@ -2,9 +2,9 @@ package org.MadManager.medmanager.controller;
 
 import org.MadManager.medmanager.models.Invoice;
 import org.MadManager.medmanager.models.Medicine;
-import org.MadManager.medmanager.models.dao.InvoiceDao;
-import org.MadManager.medmanager.models.dao.MedicineDao;
-import org.MadManager.medmanager.models.forms.AddInvoiceMedicineForm;
+import org.MadManager.medmanager.dao.InvoiceDao;
+import org.MadManager.medmanager.dao.MedicineDao;
+import org.MadManager.medmanager.forms.AddInvoiceMedicineForm;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -82,6 +82,7 @@ public class InvoiceController {
         theInvoice.addMedicine(theMedicine);
         invoiceDao.save(theInvoice);
        Integer res =  invoiceDao.updateAmount(theMedicine.getPrice(),theInvoice.getId());
+       System.out.println(res);
         return "redirect:/invoice/add-medicine?invoiceId=" + form.getInvoiceId();
     }
 }

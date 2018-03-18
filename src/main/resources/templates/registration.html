@@ -1,0 +1,23 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org/">
+<head>
+    <meta charset="UTF-8"/>
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css"></link>
+    <script type="text/javascript" src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js"></script>
+    <title th:text="registration">MedManager</title>
+</head>
+<body>
+    <form method="post" th:object="${userForm}" action="/registration">
+        <div class="form-group">
+            <input th:field="*{username}" class="form-control"/>
+            <input th:field="*{password}" class="form-control"/>
+            <input th:field="*{confirmPassword}" class="form-control" />
+            <select name="roleId" class="from-control">
+                <option th:each="role : ${roles}"
+                        th:text="${role.name}" th:value="${role.id}" class="form-control"></option>
+            </select>
+            <button type="submit" class="btn btn-info">Submit</button>
+        </div>
+    </form>
+</body>
+</html>

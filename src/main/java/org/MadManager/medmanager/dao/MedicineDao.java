@@ -1,4 +1,4 @@
-package org.MadManager.medmanager.models.dao;
+package org.MadManager.medmanager.dao;
 
 import org.MadManager.medmanager.models.Medicine;
 import org.springframework.data.repository.CrudRepository;
