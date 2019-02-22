@@ -76,10 +76,10 @@ public class UserController {
     @RequestMapping(value = "/login", method = RequestMethod.POST)
     public String login(Model model,  String error,@RequestParam("username") String username, @RequestParam("password") String passwod){
         securityService.autoLogin(username,passwod);
-        return "invoice/add";
+        return "/welcome";
     }
     @RequestMapping(value = {"/","/welcome"},method = RequestMethod.GET)
     public String welcome(Model model){
-        return "/invoice";
+        return "redirect:/invoice/add";
     }
 }
