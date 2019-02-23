@@ -1,5 +1,7 @@
 package org.MadManager.medmanager.models;
 
+import org.springframework.stereotype.Component;
+
 import javax.persistence.*;
 import javax.validation.constraints.NotNull;
 import java.util.ArrayList;
