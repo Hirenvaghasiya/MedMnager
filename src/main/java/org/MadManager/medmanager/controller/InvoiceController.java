@@ -80,9 +80,18 @@ public class InvoiceController {
         Medicine theMedicine = medicineDao.findOne(form.getMedicineId());
         Invoice theInvoice = invoiceDao.findOne(form.getInvoiceId());
         theInvoice.addMedicine(theMedicine);
+        if(null != theInvoice.getAmount())
+            theInvoice.setAmount(theInvoice.getAmount()+theMedicine.getPrice());
+        else
+            theInvoice.setAmount(theMedicine.getPrice());
         invoiceDao.save(theInvoice);
-       Integer res =  invoiceDao.updateAmount(theMedicine.getPrice(),theInvoice.getId());
-       System.out.println(res);
         return "redirect:/invoice/add-medicine?invoiceId=" + form.getInvoiceId();
+    }
+
+    @GetMapping("view")
+    public String viewInvoice(Model model){
+        model.addAttribute("title","List of Invoice");
+        model.addAttribute("invoices",invoiceDao.findAll());
+        return "invoice/view";
     }
 }

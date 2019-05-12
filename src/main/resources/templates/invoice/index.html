@@ -5,35 +5,51 @@
 
     <nav th:replace="invoices :: navigation"></nav>
 
-    <form method="post" th:object="${invoice}" style="max-width:50%;" action="/invoice/add">
-        <div class="form-group">
-            <label th:for="date">Date</label>
-            <input th:field="*{date}" class="form-control" type="date" />
-            <span th:errors="*{date}" class="error"> </span>
+    <form class="form-horizontal">
+        <div class="form-group row top-buffer">
+            <label class="col-xs-1 top-buffer">Medicine</label>
+            <div class="col-sm-2">
+                <select name="medicineId" id="medicine" class="form-control">
+                    <option th:each="medicine : *{medicines}"
+                            th:text="${medicine.name}"
+                            th:value="${medicine.id} + ',' +  ${medicine.name} + ',' +${medicine.price}" class="form-control">
+                    </option>
+                </select>
+            </div>
+            <label class="col-xs-1 top-buffer">Unit</label>
+            <div class="col-xs-2">
+                <input id="unit" class="form-control input-md" />
+                <span errors="unit" class="error"> </span>
+            </div>
+            <div class="form-group col-xs-2">
+                <button type="button" class="btn btn-info add-medicine">Add Medicine</button>
+            </div>
         </div>
-        <div class="form-group">
-            <label th:for="patientName">Petient Name</label>
-            <input th:field="*{patientName}" class="form-control" />
-            <span th:errors="*{patientName}" class="error"> </span>
-        </div>
-        <div class="form-group">
-            <button type="submit" class="btn btn-info">Submit</button>
-        </div>
-    </form>
-    <table class="table">
-        <tr>
-            <th>Date</th>
-            <th>Patient Name</th>
-            <th>Amont</th>
-            <th>Invoice</th>>
-        </tr>
-        <tr th:each="invoice: ${invoices}" >
-            <td th:text="${invoice.date}"></td>
-            <td th:text="${invoice.patientName}"></td>
-            <td th:text="${invoice.amount}"></td>
-            <td><a th:href="@{/invoice/add-medicine(invoiceId=${invoice.id})}">Add Medicine</a></td>
-        </tr>
-    </table>
 
+
+    </form>
+    <div class="col-xs-7">
+        <form id="invoice">
+            <label class="col-xs-3">Patient Name:</label>
+            <div class="col-sm-6">
+                <input class="form-control input-md" type="text" id="txtPatientName" name="txtPatientName" />
+            </div>
+
+        </form>
+
+    </div>
+    <div class="col-xs-7">
+        <table class="table table-hover .table-striped" id="tbInvoice">
+            <thead>
+            <tr>
+                <th>Medicine</th>
+                <th>Quantity</th>
+                <th>Unit Price</th>
+                <th>Total</th>
+            </tr>
+            </thead>
+            <tbody></tbody>
+        </table>
+    </div>
 </body>
 </html>

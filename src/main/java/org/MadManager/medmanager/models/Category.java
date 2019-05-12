@@ -17,9 +17,6 @@ public class Category {
     @NotNull
     private  String name;
 
-    @OneToMany
-    @JoinColumn(name = "category_id")
-    private List<Medicine> medicines = new ArrayList<>();
     public Category() {
     }
 
@@ -39,7 +36,4 @@ public class Category {
         this.name = name;
     }
 
-    public List<Medicine> getMedicines() {
-        return medicines;
-    }
 }

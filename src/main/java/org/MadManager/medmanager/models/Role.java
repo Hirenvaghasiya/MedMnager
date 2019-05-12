@@ -1,24 +1,34 @@
 package org.MadManager.medmanager.models;
 
+import org.hibernate.annotations.NaturalId;
+
 import javax.persistence.*;
+import java.lang.annotation.Native;
 import java.util.Set;
 
 /**
  * Created by hiren.vaghasiya on 2/16/2018.
  */
 @Entity
-@Table(name="role")
+@Table(name="roles")
 public class Role {
 
     @Id
     @GeneratedValue
     private Integer id;
-    private String name;
-    @OneToMany
-    @JoinColumn(name = "role_id")
-    private Set<Users> users;
 
-   public Integer getId() {
+    @Enumerated(EnumType.STRING)
+    @NaturalId
+    @Column(length = 60)
+    private RoleName name;
+
+    public Role(){}
+
+    public Role(RoleName name){
+        this.name = name;
+    }
+
+    public Integer getId() {
         return id;
     }
 
@@ -26,17 +36,12 @@ public class Role {
         this.id = id;
     }
 
-    public String getName() {
+    public RoleName getName() {
         return name;
     }
 
-    public void setName(String name) {
+    public void setName(RoleName name) {
         this.name = name;
-    }
-
-
-    public Set<Users> getUsers() {
-        return users;
     }
 
     }

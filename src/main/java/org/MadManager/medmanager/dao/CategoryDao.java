@@ -12,4 +12,5 @@ import org.springframework.transaction.annotation.Transactional;
 @Repository
 @Transactional
 public interface CategoryDao extends CrudRepository<Category, Integer> {
+    Category findByName(String name);
 }

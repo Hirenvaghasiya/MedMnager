@@ -1,6 +1,6 @@
 package org.MadManager.medmanager.validator;
 
-import org.MadManager.medmanager.models.Users;
+import org.MadManager.medmanager.models.User;
 import org.MadManager.medmanager.service.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
@@ -19,13 +19,13 @@ public class UserValidator implements Validator {
 
     @Override
     public boolean supports(Class<?> aClass){
-        return Users.class.equals(aClass);
+        return User.class.equals(aClass);
     }
 
     @Override
     public void validate(Object o, Errors errors) {
 
-        Users user = (Users) o;
+        User user = (User) o;
 
         ValidationUtils.rejectIfEmptyOrWhitespace(errors, "username","NotEmpty");
         if (user.getUsername().length() < 6 || user.getUsername().length() > 32 ){
@@ -39,8 +39,5 @@ public class UserValidator implements Validator {
             errors.rejectValue("password","Size.userForm.password");
         }
 
-        if (!user.getPassword().equals(user.getConfirmPassword())){
-            errors.rejectValue("confirmPassword","Diff.userForm.confirmPassword");
-        }
     }
 }

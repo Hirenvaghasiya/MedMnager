@@ -25,7 +25,7 @@ public class Invoice {
 
     private Double amount;
 
-    @ManyToMany(cascade = CascadeType.ALL)
+    @OneToMany(cascade = CascadeType.ALL)
     @JoinTable(name = "invoice_medicine", joinColumns = @JoinColumn(name ="invoice_id", referencedColumnName = "id"),
     inverseJoinColumns = @JoinColumn(name = "medicine_id",referencedColumnName = "id"))
     private Set<Medicine> medicines;

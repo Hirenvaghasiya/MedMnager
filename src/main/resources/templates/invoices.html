@@ -3,7 +3,27 @@
 <head>
     <meta charset="UTF-8"/>
     <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css"></link>
+    <script src="https://code.jquery.com/jquery-1.12.4.min.js"></script>
     <script type="text/javascript" src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js"></script>
+    <script type="text/javascript" th:inline="javascript">
+       $(document).ready(function(){
+        $(".add-medicine").click(function(){
+            var medicine= $("#medicine").val();
+            var unit = $("#unit").val();
+            var markup = "<tr><td>" + medicine.split(",")[1] + "</td><td>" + unit + "</td><td>"+medicine.split(",")[2]+"</td><td>"+medicine.split(",")[2] * unit+"</td> </tr>";
+            $("table tbody").append(markup);
+        });
+
+        // Find and remove selected table rows
+        $(".delete-row").click(function(){
+            $("table tbody").find('input[name="record"]').each(function(){
+            	if($(this).is(":checked")){
+                    $(this).parents("tr").remove();
+                }
+            });
+        });
+    });
+</script>
     <title th:text="Invoices">MedManager</title>
 </head>
 <body>

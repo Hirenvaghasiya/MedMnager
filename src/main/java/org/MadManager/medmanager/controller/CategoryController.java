@@ -2,15 +2,18 @@ package org.MadManager.medmanager.controller;
 
 import org.MadManager.medmanager.models.Category;
 import org.MadManager.medmanager.dao.CategoryDao;
+import org.MadManager.medmanager.payload.APIResponse;
+import org.MadManager.medmanager.payload.AddCategoryRequest;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.validation.Errors;
-import org.springframework.web.bind.annotation.ModelAttribute;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestMethod;
+import org.springframework.web.bind.annotation.*;
+import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
 
 import javax.validation.Valid;
+import java.net.URI;
 
 /**
  * Created by Hiren on 7/15/2017.
@@ -22,32 +25,15 @@ public class CategoryController {
     @Autowired
     private CategoryDao categoryDao;
 
-    @RequestMapping(value = "")
-    public String index(Model model){
+    @PostMapping
+    public ResponseEntity<?> addCategory(@Valid @RequestBody AddCategoryRequest addCategoryRequest){
 
-        model.addAttribute("title","Category");
-        model.addAttribute("categories",categoryDao.findAll());
+        Category result = categoryDao.save(new Category(addCategoryRequest.getName()));
 
-        return "category/index";
+        URI location = ServletUriComponentsBuilder
+                    .fromCurrentContextPath().path("/category/{name}")
+                    .buildAndExpand(result.getName()).toUri();
+        return ResponseEntity.created(location).body(new APIResponse(true,"Category created successfully"));
     }
-
-    @RequestMapping(value = "add", method = RequestMethod.GET)
-    public String addDisplay(Model model){
-        model.addAttribute("title","AddCategory");
-        model.addAttribute(new Category());
-
-        return "category/add";
-    }
-
-    @RequestMapping(value = "add", method = RequestMethod.POST)
-    public String processAdd(@ModelAttribute @Valid Category newCategory, Errors errors, Model model){
-        if(errors.hasErrors()){
-            model.addAttribute("title","AddCategory");
-            return "category/add";
-        }
-        categoryDao.save(newCategory);
-        return "redirect:";
-    }
-
 
 }

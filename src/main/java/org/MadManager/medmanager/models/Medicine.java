@@ -2,6 +2,10 @@ package org.MadManager.medmanager.models;
 
 
 
+import org.codehaus.jackson.map.ObjectMapper;
+import org.hibernate.annotations.OnDelete;
+import org.hibernate.annotations.OnDeleteAction;
+
 import javax.persistence.*;
 import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Size;
@@ -23,14 +27,17 @@ public class Medicine {
     private Double price;
 
     @ManyToOne
+    @JoinColumn(name = "category_id",nullable = false)
+    @OnDelete(action = OnDeleteAction.CASCADE)
     private Category category;
 
     @ManyToMany(mappedBy = "medicines")
     private Set<Invoice> invoices;
 
-    public Medicine(String name,Double price) {
+    public Medicine(String name,Double price,Category category) {
         this.name = name;
         this.price = price;
+        this.category = category;
     }
     public Medicine(){}
 
@@ -38,16 +45,9 @@ public class Medicine {
         return id;
     }
 
-    public Set<Invoice> getInvoices() {
-        return invoices;
-    }
 
     public Medicine(String name, Set<Invoice> invoices){
         this.name = name;
-        this.invoices = invoices;
-    }
-
-    public void setInvoices(Set<Invoice> invoices) {
         this.invoices = invoices;
     }
 
