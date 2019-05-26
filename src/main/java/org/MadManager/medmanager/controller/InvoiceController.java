@@ -1,97 +1,94 @@
 package org.MadManager.medmanager.controller;
 
-import org.MadManager.medmanager.models.Invoice;
-import org.MadManager.medmanager.models.Medicine;
+import org.MadManager.medmanager.dao.CategoryDao;
 import org.MadManager.medmanager.dao.InvoiceDao;
+import org.MadManager.medmanager.dao.InvoiceMedicineRepository;
 import org.MadManager.medmanager.dao.MedicineDao;
-import org.MadManager.medmanager.forms.AddInvoiceMedicineForm;
+import org.MadManager.medmanager.models.*;
+import org.MadManager.medmanager.payload.APIResponse;
+import org.MadManager.medmanager.payload.AddMedicineToInvoice;
+import org.MadManager.medmanager.payload.NewInvoiceRequest;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.ResponseEntity;
+import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.stereotype.Controller;
-import org.springframework.ui.Model;
-import org.springframework.validation.Errors;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
 
 import javax.validation.Valid;
+import java.net.URI;
+import java.util.*;
 
 /**
  * Created by hiren.vaghasiya on 7/18/2017.
  */
-@Controller
+@RestController
 @RequestMapping("invoice")
 public class InvoiceController {
 
+    private static final Logger LOGGER = LoggerFactory.getLogger(InvoiceController.class);
     @Autowired
     private InvoiceDao invoiceDao;
 
     @Autowired
     private MedicineDao medicineDao;
 
+    @Autowired
+    private InvoiceMedicineRepository invoiceMedicineRepository;
 
-    @RequestMapping(value = "")
-    public String index(Model model){
-
-        model.addAttribute("title","Invoice");
-        model.addAttribute("invoices",invoiceDao.findAll());
-        model.addAttribute(new Invoice());
-        model.addAttribute("medicines",medicineDao.findAll());
-
-        return "invoice/index";
+    @GetMapping("/{id}")
+    public Invoice getInvoice(@PathVariable Integer id){
+        return invoiceDao.findOne(id);
     }
 
-    @RequestMapping(value = "add",method = RequestMethod.GET)
-    public String addDisplay(Model model){
-        model.addAttribute("title","Add Invoice");
-        model.addAttribute(new Invoice());
-        model.addAttribute("medicines",medicineDao.findAll());
-
-        return "invoice/add";
+    @GetMapping("/{id}/details")
+    public Iterable<Object> getDetailedInvoice(@PathVariable Integer id){
+        List<Object> result = new ArrayList<>();
+        result.add(getInvoice(id));
+        result.add(invoiceMedicineRepository.findByInvoiceId(id));
+        return result;
     }
 
-    @RequestMapping(value = "add",method = RequestMethod.POST)
-    public String processAdd(@ModelAttribute @Valid Invoice newInvoice, Errors errors, Model model){
-        if(errors.hasErrors()){
-            model.addAttribute("title","Add Invoice");
-            return "invoice/add";
+    @PostMapping
+    public ResponseEntity<?> createInvoice(@Valid @RequestBody NewInvoiceRequest newInvoiceRequest){
+        LOGGER.info("New invoice request");
+        Invoice newInvoice = new Invoice(newInvoiceRequest.getPatientName());
+        Invoice result = invoiceDao.save(newInvoice);
+
+        LOGGER.info("New invoice created with id: {}",newInvoice.getId());
+
+        URI location = ServletUriComponentsBuilder
+                        .fromCurrentContextPath()
+                        .path("/invoice/{id}")
+                        .buildAndExpand(result.getId()).toUri();
+        return ResponseEntity.created(location).body( new APIResponse(true,"Invoice created successflly"));
+
+
+    }
+
+    @PostMapping("/addMedicine")
+    public ResponseEntity<?> addMedicineToInvoice(@Valid @RequestBody AddMedicineToInvoice addMedicineToInvoice){
+
+        Invoice invoice = invoiceDao.findOne(addMedicineToInvoice.getInvoiceId());
+        if(null == invoice){
+            LOGGER.info("Invoice not found with id: {}",addMedicineToInvoice.getInvoiceId());
         }
 
-        invoiceDao.save(newInvoice);
-        return "redirect:add-medicine?invoiceId="+newInvoice.getId();
+        Medicine newMedicine = medicineDao.findByName(addMedicineToInvoice.getMedicineName())
+                                            .orElseThrow(()-> new UsernameNotFoundException("Medicine not found"));
+        InvoiceMedicine newInvoiceMedicine = new InvoiceMedicine(invoice,newMedicine,addMedicineToInvoice.getQuantity());
+        newInvoiceMedicine.setUnitPrice(newMedicine.getPrice());
+        invoice.setAmount(invoice.getAmount() + (newMedicine.getPrice() * addMedicineToInvoice.getQuantity()));
+
+        InvoiceMedicine result = invoiceMedicineRepository.save(newInvoiceMedicine);
+
+        URI location = ServletUriComponentsBuilder
+                        .fromCurrentContextPath()
+                            .path("/invoice/{id}").buildAndExpand(result.getId()).toUri();
+        return ResponseEntity.created(location).body(new APIResponse(true,"Medicine added to invoice"));
     }
 
-    @RequestMapping(value = "add-medicine", method = RequestMethod.GET, params = {"invoiceId"})
-    public String addMedicine(Model model, @RequestParam("invoiceId") Integer invoiceId){
-        Invoice invoice = invoiceDao.findOne(invoiceId);
 
-        AddInvoiceMedicineForm form = new AddInvoiceMedicineForm(medicineDao.findAll(),invoice);
-        model.addAttribute("title","Add Medicien to Invoice: " + invoice.getPatientName());
-        model.addAttribute("form",form);
-        model.addAttribute("invoice",invoice);
-        return "invoice/add-medicine";
-    }
-
-    @RequestMapping(value = "add-medicine",method = RequestMethod.POST)
-    public String addMedicine(Model model, @ModelAttribute @Valid AddInvoiceMedicineForm form, Errors errors){
-        if(errors.hasErrors()){
-            model.addAttribute("title","Add Medicine to Invoice");
-            model.addAttribute("form",form);
-            return "redirect:invoice/add-medicine";
-        }
-
-        Medicine theMedicine = medicineDao.findOne(form.getMedicineId());
-        Invoice theInvoice = invoiceDao.findOne(form.getInvoiceId());
-        theInvoice.addMedicine(theMedicine);
-        if(null != theInvoice.getAmount())
-            theInvoice.setAmount(theInvoice.getAmount()+theMedicine.getPrice());
-        else
-            theInvoice.setAmount(theMedicine.getPrice());
-        invoiceDao.save(theInvoice);
-        return "redirect:/invoice/add-medicine?invoiceId=" + form.getInvoiceId();
-    }
-
-    @GetMapping("view")
-    public String viewInvoice(Model model){
-        model.addAttribute("title","List of Invoice");
-        model.addAttribute("invoices",invoiceDao.findAll());
-        return "invoice/view";
-    }
 }

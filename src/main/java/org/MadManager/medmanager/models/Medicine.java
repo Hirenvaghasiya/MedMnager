@@ -1,8 +1,6 @@
 package org.MadManager.medmanager.models;
 
 
-
-import org.codehaus.jackson.map.ObjectMapper;
 import org.hibernate.annotations.OnDelete;
 import org.hibernate.annotations.OnDeleteAction;
 
@@ -31,9 +29,6 @@ public class Medicine {
     @OnDelete(action = OnDeleteAction.CASCADE)
     private Category category;
 
-    @ManyToMany(mappedBy = "medicines")
-    private Set<Invoice> invoices;
-
     public Medicine(String name,Double price,Category category) {
         this.name = name;
         this.price = price;
@@ -46,9 +41,8 @@ public class Medicine {
     }
 
 
-    public Medicine(String name, Set<Invoice> invoices){
+    public Medicine(String name){
         this.name = name;
-        this.invoices = invoices;
     }
 
     public String getName() {

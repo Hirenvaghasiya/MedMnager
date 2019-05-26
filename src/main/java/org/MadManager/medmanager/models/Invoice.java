@@ -3,8 +3,7 @@ package org.MadManager.medmanager.models;
 
 import javax.persistence.*;
 import javax.validation.constraints.NotNull;
-import java.util.ArrayList;
-import java.util.List;
+import java.util.Date;
 import java.util.Set;
 
 /**
@@ -21,24 +20,26 @@ public class Invoice {
     private String patientName;
 
     @NotNull
-    private String date;
+    private Date date;
 
     private Double amount;
 
-    @OneToMany(cascade = CascadeType.ALL)
-    @JoinTable(name = "invoice_medicine", joinColumns = @JoinColumn(name ="invoice_id", referencedColumnName = "id"),
-    inverseJoinColumns = @JoinColumn(name = "medicine_id",referencedColumnName = "id"))
-    private Set<Medicine> medicines;
+//    @ManyToMany(fetch = FetchType.LAZY)
+//    @JoinTable(name = "invoice_medicine",
+//            joinColumns = @JoinColumn(name="invoice_id"),
+//            inverseJoinColumns = @JoinColumn(name = "medicine_id"))
+//    private Set<Medicine> medicines;
 
     public Invoice(){}
 
     public Invoice(String patientName){
         this.patientName = patientName;
+        this.date = new Date();
+        this.amount = 0D;
     }
 
-    public Invoice(String patientName, Set<Medicine> medicines){
+    public Invoice(String patientName, Set<InvoiceMedicine> invoiceMedicines){
         this.patientName = patientName;
-        this.medicines = medicines;
     }
 
     public Integer getId() {
@@ -53,24 +54,11 @@ public class Invoice {
         this.patientName = patientName;
     }
 
-    public Set<Medicine> getMedicines() {
-        return medicines;
-    }
-
-
-    public void setMedicines(Set<Medicine> medicines) {
-        this.medicines = medicines;
-    }
-
-    public void addMedicine(Medicine medicine){
-        medicines.add(medicine);
-    }
-
-    public String getDate() {
+    public Date getDate() {
         return date;
     }
 
-    public void setDate(String date) {
+    public void setDate(Date date) {
         this.date = date;
     }
 

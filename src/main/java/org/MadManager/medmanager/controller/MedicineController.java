@@ -1,28 +1,22 @@
 package org.MadManager.medmanager.controller;
 
-import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
-import org.MadManager.medmanager.models.Category;
-import org.MadManager.medmanager.models.Medicine;
 import org.MadManager.medmanager.dao.CategoryDao;
 import org.MadManager.medmanager.dao.MedicineDao;
+import org.MadManager.medmanager.models.Category;
+import org.MadManager.medmanager.models.Medicine;
 import org.MadManager.medmanager.payload.APIResponse;
 import org.MadManager.medmanager.payload.AddMedicineRequest;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
-import org.springframework.stereotype.Controller;
-import org.springframework.ui.Model;
-import org.springframework.validation.Errors;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
 
 import javax.validation.Valid;
 import java.io.IOException;
 import java.net.URI;
-import java.util.List;
-import java.util.logging.LogManager;
 
 /**
  * Created by Hiren on 7/9/2017.
