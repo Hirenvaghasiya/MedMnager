@@ -2,7 +2,7 @@ package org.MadManager.medmanager.payload;
 
 import org.MadManager.medmanager.models.Category;
 
-public class AddMedicineRequest {
+public class AddItemRequest {
 
     private String name;
     private Category category;

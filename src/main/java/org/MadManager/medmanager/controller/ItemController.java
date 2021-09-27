@@ -2,11 +2,11 @@ package org.MadManager.medmanager.controller;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import org.MadManager.medmanager.dao.CategoryDao;
-import org.MadManager.medmanager.dao.MedicineDao;
+import org.MadManager.medmanager.dao.ItemDao;
 import org.MadManager.medmanager.models.Category;
-import org.MadManager.medmanager.models.Medicine;
+import org.MadManager.medmanager.models.Item;
 import org.MadManager.medmanager.payload.APIResponse;
-import org.MadManager.medmanager.payload.AddMedicineRequest;
+import org.MadManager.medmanager.payload.AddItemRequest;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -17,18 +17,19 @@ import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
 import javax.validation.Valid;
 import java.io.IOException;
 import java.net.URI;
+import java.net.URISyntaxException;
 
 /**
  * Created by Hiren on 7/9/2017.
  */
 @RestController
-@RequestMapping("medicine")
-public class MedicineController {
+@RequestMapping("item")
+public class ItemController {
 
-    private static final Logger LOGGER = LoggerFactory.getLogger(MedicineController.class);
+    private static final Logger LOGGER = LoggerFactory.getLogger(ItemController.class);
 
     @Autowired
-    private MedicineDao medicineDao;
+    private ItemDao itemDao;
 
     @Autowired
     private CategoryDao categoryDao;
@@ -93,60 +94,72 @@ public class MedicineController {
 //    }
 
     @GetMapping(value = "/{id}")
-    public Medicine getMedicineById(@PathVariable Integer id){
+    public Item getItemById(@PathVariable Integer id){
         LOGGER.info("GET Request receive for nedicineId: {}",id);
 
-        return medicineDao.findOne(id);
+        return itemDao.findOne(id);
     }
 
     @GetMapping
-    public Iterable<Medicine> getMedicines(){
-        return medicineDao.findAll();
+    public Iterable<Item> getItems(){
+        return itemDao.findAll();
     }
 
     @PostMapping
-    public ResponseEntity<?>  addMedicine(@Valid @RequestBody AddMedicineRequest addMedicineRequest) {
-        LOGGER.info("POST resquest receive for medicien with name: {}, price: {}, category: {}",addMedicineRequest.getName(), addMedicineRequest.getPrice(), addMedicineRequest.getCategory().getName());
+    public ResponseEntity<?>  addItem(@Valid @RequestBody Item addItemRequest) throws URISyntaxException {
+        LOGGER.info("POST request receive for item with name: {}, price: {}, category: {}", addItemRequest.getName(), addItemRequest.getPrice(), addItemRequest.getCategory().getId());
 
-        Category medicineCategory = categoryDao.findByName(addMedicineRequest.getCategory().getName());
+        Category itemCategory = categoryDao.findOne(addItemRequest.getCategory().getId());
+        if(null == itemCategory){
 
-        if(null == medicineCategory){
-            LOGGER.info("Medicine category {} not found",addMedicineRequest.getCategory().getName());
+            LOGGER.info("Medicine category {} not found", addItemRequest.getCategory().getId());
+            return ResponseEntity.created(new URI("/")).body(new APIResponse(false,"Category not found"));
         }
 
-        Medicine newMedicine = new Medicine(addMedicineRequest.getName(),addMedicineRequest.getPrice(),medicineCategory);
-        Medicine result = medicineDao.save(newMedicine);
+        Item newItem = new Item(addItemRequest.getName(), addItemRequest.getPrice(),itemCategory);
+        Item result = itemDao.save(newItem);
 
-        LOGGER.info("New medicine added with id {}",newMedicine.getId());
+        LOGGER.info("New item added with id {}", newItem.getId());
 
         URI location = ServletUriComponentsBuilder
                 .fromCurrentContextPath()
-                .path("/medicine/{id}")
+                .path("/item/{id}")
                 .buildAndExpand(result.getId()).toUri();
-        return ResponseEntity.created(location).body(new APIResponse(true,"Medicine Added successfully"));
+        return ResponseEntity.created(location).body(new APIResponse(true,"Item Added successfully"));
     }
 
     @PutMapping("{id}")
-    public @ResponseBody String updateMedicine(@PathVariable Integer id, @RequestBody Medicine medicineToUpdate) throws IOException {
-        Medicine old = medicineDao.findOne(id);
+    public ResponseEntity<?> updateMedicine(@PathVariable Integer id, @RequestBody Item itemToUpdate) throws IOException, URISyntaxException {
+        Item old = itemDao.findOne(id);
+        Category newCat = categoryDao.findOne(itemToUpdate.getCategory().getId());
 
-        if(null!=medicineToUpdate.getName())
-            old.setName(medicineToUpdate.getName());
+        if(null!= itemToUpdate.getName())
+            old.setName(itemToUpdate.getName());
 
-        if(null!=medicineToUpdate.getPrice())
-            old.setPrice(medicineToUpdate.getPrice());
+        if(null!= itemToUpdate.getPrice())
+            old.setPrice(itemToUpdate.getPrice());
 
-        if(null!=medicineToUpdate.getCategory())
-            old.setCategory(medicineToUpdate.getCategory());
+        if(null!= newCat)
+            old.setCategory(itemToUpdate.getCategory());
+        else
+        {
+            LOGGER.info("Item category {} not found", itemToUpdate.getCategory().getId());
+            return  ResponseEntity.created(new URI("/")).body(new APIResponse(false,"Category not found"));
+        }
 
-        medicineDao.save(old);
+      Item result =  itemDao.save(old);
 
-        return mapper.writeValueAsString(old);
+      URI location = ServletUriComponentsBuilder
+                .fromCurrentContextPath()
+                .path("/item/{id}")
+                .buildAndExpand(result.getId()).toUri();
+        return ResponseEntity.created(location).body(new APIResponse(true,"Item updated successfully"));
+
     }
     @DeleteMapping(value = "{id}")
     public String deleteMedicine(@PathVariable Integer id){
-        LOGGER.info("Delete request receive for medicineId: {}",id);
-        medicineDao.delete(id);
+        LOGGER.info("Delete request receive for itemId: {}",id);
+        itemDao.delete(id);
         return "Medicine deleted "+id;
     }
 }

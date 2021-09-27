@@ -13,11 +13,11 @@
                 <th>Type</th>
                 <th>Price</th>
             </tr>
-            <tr  th:each="medicine: ${medicines}" >
-                <td th:text="${medicine.id}"></td>
-                <td th:text="${medicine.name}"></td>
-                <td th:text="${medicine.category.name}"></td>
-                <td th:text="${medicine.price}"></td>
+            <tr  th:each="item: ${medicines}" >
+                <td th:text="${item.id}"></td>
+                <td th:text="${item.name}"></td>
+                <td th:text="${item.category.name}"></td>
+                <td th:text="${item.price}"></td>
             </tr>
         </table>
 

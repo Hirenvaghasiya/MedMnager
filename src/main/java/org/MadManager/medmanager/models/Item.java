@@ -13,10 +13,10 @@ import java.util.Set;
  * Created by Hiren on 7/11/2017.
  */
 @Entity
-public class Medicine {
+public class Item {
 
     @Id
-    @GeneratedValue
+    @GeneratedValue()
     private Integer id;
     @NotNull
     @Size(min = 1, message = "Enter Name")
@@ -29,19 +29,19 @@ public class Medicine {
     @OnDelete(action = OnDeleteAction.CASCADE)
     private Category category;
 
-    public Medicine(String name,Double price,Category category) {
+    public Item(String name, Double price, Category category) {
         this.name = name;
         this.price = price;
         this.category = category;
     }
-    public Medicine(){}
+    public Item(){}
 
     public Integer getId() {
         return id;
     }
 
 
-    public Medicine(String name){
+    public Item(String name){
         this.name = name;
     }
 

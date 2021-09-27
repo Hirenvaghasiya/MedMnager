@@ -9,10 +9,10 @@
         <div class="form-group row top-buffer">
             <label class="col-xs-1 top-buffer">Medicine</label>
             <div class="col-sm-2">
-                <select name="medicineId" id="medicine" class="form-control">
-                    <option th:each="medicine : *{medicines}"
-                            th:text="${medicine.name}"
-                            th:value="${medicine.id} + ',' +  ${medicine.name} + ',' +${medicine.price}" class="form-control">
+                <select name="medicineId" id="item" class="form-control">
+                    <option th:each="item : *{medicines}"
+                            th:text="${item.name}"
+                            th:value="${item.id} + ',' +  ${item.name} + ',' +${item.price}" class="form-control">
                     </option>
                 </select>
             </div>
@@ -22,7 +22,7 @@
                 <span errors="unit" class="error"> </span>
             </div>
             <div class="form-group col-xs-2">
-                <button type="button" class="btn btn-info add-medicine">Add Medicine</button>
+                <button type="button" class="btn btn-info add-item">Add Medicine</button>
             </div>
         </div>
 

@@ -1,7 +1,7 @@
 package org.MadManager.medmanager.forms;
 
 import org.MadManager.medmanager.models.Invoice;
-import org.MadManager.medmanager.models.Medicine;
+import org.MadManager.medmanager.models.Item;
 
 import javax.validation.constraints.NotNull;
 
@@ -16,13 +16,13 @@ public class AddInvoiceMedicineForm {
     @NotNull
     private Integer medicineId;
 
-    private Iterable<Medicine> medicines;
+    private Iterable<Item> medicines;
 
     private Invoice invoice;
 
     public AddInvoiceMedicineForm() {  }
 
-    public AddInvoiceMedicineForm(Iterable<Medicine> medicines, Invoice invoice) {
+    public AddInvoiceMedicineForm(Iterable<Item> medicines, Invoice invoice) {
         this.medicines = medicines;
         this.invoice = invoice;
     }
@@ -43,7 +43,7 @@ public class AddInvoiceMedicineForm {
         this.medicineId = medicineId;
     }
 
-    public Iterable<Medicine> getMedicines() {
+    public Iterable<Item> getMedicines() {
         return medicines;
     }
 
