@@ -12,5 +12,4 @@ services:
     ports:
       - 3306:3306
     volumes:
-      - /home/${USER}/medmanager:/var/lib/mysql
-      - /home/${USER}/docker/medmanagerdb:/home/scripts
+      - /home/hirenv/git/MedMnager/docker/medmanagerdb:/home/scripts

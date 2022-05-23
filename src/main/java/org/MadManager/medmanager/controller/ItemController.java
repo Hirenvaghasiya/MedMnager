@@ -5,25 +5,20 @@ import org.MadManager.medmanager.dao.CategoryDao;
 import org.MadManager.medmanager.dao.ItemDao;
 import org.MadManager.medmanager.models.Category;
 import org.MadManager.medmanager.models.Item;
-import org.MadManager.medmanager.payload.APIResponse;
-import org.MadManager.medmanager.payload.AddItemRequest;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
-import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
 
 import javax.validation.Valid;
 import java.io.IOException;
-import java.net.URI;
 import java.net.URISyntaxException;
 
 /**
  * Created by Hiren on 7/9/2017.
  */
 @RestController
-@RequestMapping("item")
+@RequestMapping("/api/item")
 public class ItemController {
 
     private static final Logger LOGGER = LoggerFactory.getLogger(ItemController.class);
@@ -97,7 +92,7 @@ public class ItemController {
     public Item getItemById(@PathVariable Integer id){
         LOGGER.info("GET Request receive for nedicineId: {}",id);
 
-        return itemDao.findOne(id);
+        return itemDao.findById(id).orElse(new Item());
     }
 
     @GetMapping
@@ -106,14 +101,13 @@ public class ItemController {
     }
 
     @PostMapping
-    public ResponseEntity<?>  addItem(@Valid @RequestBody Item addItemRequest) throws URISyntaxException {
+    public Item  addItem(@Valid @RequestBody Item addItemRequest) throws URISyntaxException {
         LOGGER.info("POST request receive for item with name: {}, price: {}, category: {}", addItemRequest.getName(), addItemRequest.getPrice(), addItemRequest.getCategory().getId());
 
-        Category itemCategory = categoryDao.findOne(addItemRequest.getCategory().getId());
+        Category itemCategory = categoryDao.findById(addItemRequest.getCategory().getId()).orElse(null);
         if(null == itemCategory){
 
             LOGGER.info("Medicine category {} not found", addItemRequest.getCategory().getId());
-            return ResponseEntity.created(new URI("/")).body(new APIResponse(false,"Category not found"));
         }
 
         Item newItem = new Item(addItemRequest.getName(), addItemRequest.getPrice(),itemCategory);
@@ -121,17 +115,13 @@ public class ItemController {
 
         LOGGER.info("New item added with id {}", newItem.getId());
 
-        URI location = ServletUriComponentsBuilder
-                .fromCurrentContextPath()
-                .path("/item/{id}")
-                .buildAndExpand(result.getId()).toUri();
-        return ResponseEntity.created(location).body(new APIResponse(true,"Item Added successfully"));
+        return newItem;
     }
 
     @PutMapping("{id}")
-    public ResponseEntity<?> updateMedicine(@PathVariable Integer id, @RequestBody Item itemToUpdate) throws IOException, URISyntaxException {
-        Item old = itemDao.findOne(id);
-        Category newCat = categoryDao.findOne(itemToUpdate.getCategory().getId());
+    public Item updateItem(@PathVariable Integer id, @RequestBody Item itemToUpdate) throws IOException, URISyntaxException {
+        Item old = itemDao.findById(id).orElse(new Item());
+        Category newCat = categoryDao.findById(itemToUpdate.getCategory().getId()).orElse(new Category());
 
         if(null!= itemToUpdate.getName())
             old.setName(itemToUpdate.getName());
@@ -144,22 +134,20 @@ public class ItemController {
         else
         {
             LOGGER.info("Item category {} not found", itemToUpdate.getCategory().getId());
-            return  ResponseEntity.created(new URI("/")).body(new APIResponse(false,"Category not found"));
+            throw new RuntimeException("Item Category does not exists");
         }
 
-      Item result =  itemDao.save(old);
+      return   itemDao.save(old);
 
-      URI location = ServletUriComponentsBuilder
-                .fromCurrentContextPath()
-                .path("/item/{id}")
-                .buildAndExpand(result.getId()).toUri();
-        return ResponseEntity.created(location).body(new APIResponse(true,"Item updated successfully"));
+
 
     }
     @DeleteMapping(value = "{id}")
-    public String deleteMedicine(@PathVariable Integer id){
+    public Item deleteItem(@PathVariable Integer id){
         LOGGER.info("Delete request receive for itemId: {}",id);
-        itemDao.delete(id);
-        return "Medicine deleted "+id;
+        Item itemToDelete = getItemById(id);
+        itemDao.deleteById(id);
+        LOGGER.info("Item Deleted {}", itemToDelete);
+        return itemToDelete;
     }
 }

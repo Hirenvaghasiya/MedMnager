@@ -1,20 +1,16 @@
 package org.MadManager.medmanager.service;
 
-import org.MadManager.medmanager.models.User;
-import org.MadManager.medmanager.dao.RoleRepository;
+import java.util.Optional;
+
 import org.MadManager.medmanager.dao.UserRepository;
+import org.MadManager.medmanager.models.User;
 import org.MadManager.medmanager.security.UserPrincipal;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.boot.context.config.ResourceNotFoundException;
-import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
-import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
-
-import java.util.*;
 
 
 /**

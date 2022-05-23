@@ -15,9 +15,12 @@ import java.util.Set;
 @Entity
 public class Invoice implements Serializable {
 
-    private static final Long serialVersionID = 1L;
+    /**
+	 * 
+	 */
+	private static final long serialVersionUID = 1L;
 
-    @Id
+	@Id
     @GeneratedValue
     private Integer id;
 

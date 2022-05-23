@@ -1,21 +1,11 @@
-buildscript {
-	ext {
-		springBootVersion = '1.5.4.RELEASE'
-	}
-	repositories {
-		mavenCentral()
-	}
-	dependencies {
-		classpath("org.springframework.boot:spring-boot-gradle-plugin:${springBootVersion}")
-	}
+plugins {
+	id 'org.springframework.boot' version '2.6.1'
+	id 'io.spring.dependency-management' version '1.0.11.RELEASE'
+	id 'java'
 }
-
-apply plugin: 'java'
-apply plugin: 'eclipse'
-apply plugin: 'org.springframework.boot'
-
-version = '0.0.1-SNAPSHOT'
-sourceCompatibility = 1.8
+group = 'org.MadManager'
+version = '0.0.1-SNAPSHOT'	
+sourceCompatibility = '1.8'
 
 repositories {
 	mavenCentral()
@@ -23,22 +13,42 @@ repositories {
 
 
 dependencies {
-	compile('org.springframework.boot:spring-boot-starter-thymeleaf')
-	compile('org.springframework.boot:spring-boot-starter-web')
-	compile('org.springframework.boot:spring-boot-starter-data-jpa')
-	compile('org.springframework.boot:spring-boot-starter-security')
-	compile group: 'org.springframework.cloud', name: 'spring-cloud-starter-oauth2', version: '1.2.3.RELEASE'
-	compile('org.springframework.security.extensions:spring-security-saml2-core:1.0.2.RELEASE')
-	compile group: 'org.springframework.security', name: 'spring-security-jwt', version: '1.0.7.RELEASE'
+	// compile('org.springframework.boot:spring-boot-starter-thymeleaf')
+	//compile('org.springframework.boot:spring-boot-starter-web')
+	//compile('org.springframework.boot:spring-boot-starter-data-jpa')
+	//compile('org.springframework.boot:spring-boot-starter-security')
+	//compile group: 'org.springframework.cloud', name: 'spring-cloud-starter-oauth2', version: '1.2.3.RELEASE'
+	//compile('org.springframework.security.extensions:spring-security-saml2-core:1.0.2.RELEASE')
+	//compile group: 'org.springframework.security', name: 'spring-security-jwt', version: '1.0.7.RELEASE'
 	// compile('spring-security-oauth2 version: 2.1.0.RELEASE')
-	compile group: 'io.jsonwebtoken', name: 'jjwt', version: '0.2'
-	compile('org.slf4j:integration:1.5.4')
-    compile('mysql:mysql-connector-java')
-	runtime('org.postgresql:postgresql')
-	runtime('org.springframework.boot:spring-boot-devtools')
-	testCompile('org.springframework.boot:spring-boot-starter-test')
-}
+	//compile group: 'io.jsonwebtoken', name: 'jjwt', version: '0.2'
+	//compile('org.slf4j:integration:1.5.4')
+    //compile('mysql:mysql-connector-java')
+	//runtime('org.postgresql:postgresql')
+	//runtime('org.springframework.boot:spring-boot-devtools')
+	//testCompile('org.springframework.boot:spring-boot-starter-test')
+	//testImplementation 'org.junit.jupiter:junit-jupiter-api:5.3.1'
+   // testRuntimeOnly 'org.junit.jupiter:junit-jupiter-engine:5.3.1'
+	
+  implementation 'org.springframework.boot:spring-boot-starter-data-jpa'
+  implementation 'org.springframework.boot:spring-boot-starter-oauth2-client'
+  implementation 'org.springframework.boot:spring-boot-starter-security'
+  implementation 'org.springframework.boot:spring-boot-starter-thymeleaf'
+  implementation 'org.springframework.boot:spring-boot-starter-web'
+  implementation 'org.thymeleaf.extras:thymeleaf-extras-springsecurity5'
+  implementation 'org.springframework.boot:spring-boot-starter-validation'
+  implementation group: 'org.codehaus.jackson', name: 'jackson-core-asl', version: '1.1.0'
+  implementation group: 'io.jsonwebtoken', name: 'jjwt', version: '0.2'
+  // implementation group: 'org.springframework.boot', name: 'spring-boot', version: '2.6.1'
+  	runtimeOnly 'org.slf4j:integration:1.5.4'
+  
+  
+ 
+  runtimeOnly 'mysql:mysql-connector-java'
+  testImplementation 'org.springframework.boot:spring-boot-starter-test'
+  testImplementation 'org.springframework.security:spring-security-test'
+  testImplementation 'org.junit.jupiter:junit-jupiter-engine:5.3.1'
+  testImplementation 'org.junit.jupiter:junit-jupiter-api:5.3.1'
 
-bootRun{
-	addResources=true
+		
 }

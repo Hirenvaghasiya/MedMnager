@@ -16,7 +16,7 @@ import java.net.URI;
  * Created by Hiren on 7/15/2017.
  */
 @RestController
-@RequestMapping("category")
+@RequestMapping("/api/category")
 public class CategoryController {
 
     @Autowired

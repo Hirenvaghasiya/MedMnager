@@ -14,12 +14,13 @@ import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
 import javax.validation.Valid;
 import java.net.URI;
 import java.util.List;
+import java.util.Optional;
 
 /**
  * Created by hiren.vaghasiya on 7/18/2017.
  */
 @RestController
-@RequestMapping("invoice")
+@RequestMapping("/api/invoice")
 public class InvoiceController {
 
     private static final Logger LOGGER = LoggerFactory.getLogger(InvoiceController.class);
@@ -33,8 +34,8 @@ public class InvoiceController {
 //    private InvoiceMedicineRepository invoiceMedicineRepository;
 
     @GetMapping("/{id}")
-    public Invoice getInvoice(@PathVariable Integer id){
-        return invoiceDao.findOne(id);
+    public Optional<Invoice> getInvoice(@PathVariable Integer id){
+        return invoiceDao.findById(id);
     }
 
 //    @GetMapping("/{id}/details")
@@ -45,8 +46,12 @@ public class InvoiceController {
 //        return result;
 //    }
 
+    @GetMapping
+    Iterable<Invoice> getInvoices(){
+        return invoiceDao.findAll();
+    }
     @PostMapping
-    public ResponseEntity<?> createInvoice(@Valid @RequestBody Invoice newInvoiceRequest){
+    public Invoice createInvoice(@Valid @RequestBody Invoice newInvoiceRequest){
         LOGGER.info("New invoice request");
         Invoice newInvoice = new Invoice();
         newInvoice.setCustomerName(newInvoiceRequest.getCustomerName());
@@ -55,7 +60,7 @@ public class InvoiceController {
         {
           for (int i=0; i<itemList.size(); i++)
           {
-             Item item = itemDao.findOne(itemList.get(i).getId());
+             Item item = itemDao.findById(itemList.get(i).getId()).orElse(new Item());
              InvoiceItem line = new InvoiceItem();
              line.setQuantity(itemList.get(i).getQuantity());
              line.setItem(item);
@@ -68,11 +73,7 @@ public class InvoiceController {
 
         LOGGER.info("New invoice created with id: {}",newInvoice.getId());
 
-        URI location = ServletUriComponentsBuilder
-                        .fromCurrentContextPath()
-                        .path("/invoice/{id}")
-                        .buildAndExpand(result.getId()).toUri();
-        return ResponseEntity.created(location).body( new APIResponse(true,"Invoice created successflly"));
+        return result;
 
 
     }
