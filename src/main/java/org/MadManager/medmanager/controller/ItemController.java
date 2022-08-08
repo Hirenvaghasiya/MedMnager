@@ -1,6 +1,7 @@
 package org.MadManager.medmanager.controller;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
+import io.swagger.v3.oas.annotations.tags.Tag;
 import org.MadManager.medmanager.dao.CategoryDao;
 import org.MadManager.medmanager.dao.ItemDao;
 import org.MadManager.medmanager.models.Category;
@@ -19,6 +20,7 @@ import java.net.URISyntaxException;
  */
 @RestController
 @RequestMapping("/api/item")
+@Tag(name = "Item")
 public class ItemController {
 
     private static final Logger LOGGER = LoggerFactory.getLogger(ItemController.class);

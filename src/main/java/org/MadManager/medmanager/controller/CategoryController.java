@@ -1,5 +1,7 @@
 package org.MadManager.medmanager.controller;
 
+import io.swagger.v3.oas.annotations.Operation;
+import io.swagger.v3.oas.annotations.tags.Tag;
 import org.MadManager.medmanager.dao.CategoryDao;
 import org.MadManager.medmanager.models.Category;
 import org.MadManager.medmanager.payload.APIResponse;
@@ -17,16 +19,19 @@ import java.net.URI;
  */
 @RestController
 @RequestMapping("/api/category")
+@Tag(name = "Category")
 public class CategoryController {
 
     @Autowired
     private CategoryDao categoryDao;
 
     @GetMapping
+    @Operation(description = "Get all categories")
     public Iterable<Category> getCategories(){
         return categoryDao.findAll();
     }
     @PostMapping
+    @Operation(description = "Add new Category")
     public ResponseEntity<?> addCategory(@Valid @RequestBody AddCategoryRequest addCategoryRequest){
 
         Category result = categoryDao.save(new Category(addCategoryRequest.getName()));

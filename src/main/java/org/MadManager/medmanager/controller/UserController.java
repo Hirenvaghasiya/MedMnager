@@ -1,5 +1,6 @@
 package org.MadManager.medmanager.controller;
 
+import io.swagger.v3.oas.annotations.tags.Tag;
 import org.MadManager.medmanager.dao.UserRepository;
 import org.MadManager.medmanager.models.User;
 import org.MadManager.medmanager.payload.UserSummary;
@@ -20,7 +21,8 @@ import org.springframework.web.bind.annotation.RestController;
  */
 
 @RestController
-@RequestMapping("/user")
+@RequestMapping("/api/user")
+@Tag(name = "User")
 public class UserController {
 
     private static final Logger LOGGER = LoggerFactory.getLogger(UserController.class);

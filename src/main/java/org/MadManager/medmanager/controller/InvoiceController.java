@@ -1,5 +1,6 @@
 package org.MadManager.medmanager.controller;
 
+import io.swagger.v3.oas.annotations.tags.Tag;
 import org.MadManager.medmanager.dao.InvoiceDao;
 import org.MadManager.medmanager.dao.ItemDao;
 import org.MadManager.medmanager.models.*;
@@ -21,6 +22,7 @@ import java.util.Optional;
  */
 @RestController
 @RequestMapping("/api/invoice")
+@Tag(name = "Invoice")
 public class InvoiceController {
 
     private static final Logger LOGGER = LoggerFactory.getLogger(InvoiceController.class);

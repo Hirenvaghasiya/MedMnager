@@ -1,5 +1,6 @@
 package org.MadManager.medmanager.controller;
 
+import io.swagger.v3.oas.annotations.tags.Tag;
 import org.MadManager.medmanager.dao.RoleRepository;
 import org.MadManager.medmanager.dao.UserRepository;
 import org.MadManager.medmanager.models.Role;
@@ -19,7 +20,6 @@ import org.springframework.security.authentication.UsernamePasswordAuthenticatio
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.crypto.password.PasswordEncoder;
-import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -32,6 +32,7 @@ import java.util.Collections;
 
 @RestController
 @RequestMapping("/api/auth")
+@Tag(name = "Authentication")
 public class AuthController {
 
     private static final Logger LOGGER = LoggerFactory.getLogger(AuthController.class);
